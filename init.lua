@@ -94,7 +94,7 @@ end
 
 function lazy.setup(plugins)
   -- You can "comment out" the line below after lazy.nvim is installed
-  --lazy.install(lazy.path)
+  lazy.install(lazy.path)
 
   vim.opt.rtp:prepend(lazy.path)
   require('lazy').setup(plugins, lazy.opts)
@@ -128,14 +128,6 @@ lazy.setup({
 	{'nvim-lua/plenary.nvim'},
 	{'akinsho/toggleterm.nvim'},
 
-	-- Code manipulation
-	--{'nvim-treesitter/nvim-treesitter'},
-	--{'nvim-treesitter/nvim-treesitter-textobjects'},
-	--{'numToStr/Comment.nvim'},
-	--{'tpope/vim-surround'},
-	--{'wellle/targets.vim'},
-	--{'tpope/vim-repeat'},
-	
 	-- LSP support
 	{'neovim/nvim-lspconfig'},
 
