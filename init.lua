@@ -1,81 +1,76 @@
-print("Glad to see you!")
-
 -- ========================================================================== --
 -- ==                           EDITOR SETTINGS                            == --
 -- ========================================================================== --
 
-vim.opt.number = true
+-- Encoding
+vim.scriptencoding = "utf-8"
+vim.opt.encoding = "utf-8"
+vim.opt.fileencoding = "utf-8"
+-- Misc
+vim.opt.history = 10
+vim.opt.title = true -- file name as terminal title
 vim.opt.mouse = 'a'
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.hlsearch = false
-vim.opt.wrap = true
-vim.opt.breakindent = true
-vim.opt.backspace = '2'
-vim.opt.signcolumn = 'yes'
-vim.opt.showcmd = false
-vim.opt.laststatus = 2
-vim.opt.autowrite = true
+vim.opt.signcolumn = "yes"
+vim.opt.clipboard = "unnamed"
+-- Theming
+vim.opt.wrap = false -- don't cut my lines!
+vim.opt.syntax = "on"
+vim.opt.relativenumber = false
+vim.opt.number = true -- display line number
 vim.opt.cursorline = false
+-- Buffers
+vim.opt.backup = false
+vim.opt.autowrite = false
 vim.opt.autoread = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.shiftround = true
+-- statusline
+vim.opt.showcmd = false -- display last command used
+vim.opt.laststatus = 2
+-- Tab spacing
 vim.opt.expandtab = false
-
+vim.opt.smarttab = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.backspace = '2'
+-- Indentation
+vim.opt.breakindent = true
+vim.opt.autoindent = true -- auto indent after new line
+vim.opt.shiftround = true
+vim.opt.showmatch = true
+vim.opt.scrolloff = 10 -- the screen follows the cursor if there is a space of x lines
+-- search
+vim.opt.ignorecase = true -- searches are case insensitive
+vim.opt.smartcase = true -- unless they contain at least one capital letter
+vim.opt.hlsearch = false -- highlight matches
 
 -- ========================================================================== --
 -- ==                             KEYBINDINGS                              == --
 -- ========================================================================== --
 
--- Space as leader key
+-- leader key
 vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
 
 -- Shortcuts
 vim.keymap.set({'n', 'x', 'o'}, '<leader>h', '^')
 vim.keymap.set({'n', 'x', 'o'}, '<leader>l', 'g_')
-vim.keymap.set('n', '<leader>a', ':keepjumps normal! ggVG<cr>')
 
--- Tab navigation
-vim.keymap.set('n', 'z', '<cmd>BufferLineCycleNext<cr>')
-vim.keymap.set('n', 'x', '<cmd>BufferLineCyclePrev<cr>')
+-- Navigation (BufferLine & NvimTree)
+vim.keymap.set('n', 'x', '<cmd>BufferLineCycleNext<cr>')
+vim.keymap.set('n', 'z', '<cmd>BufferLineCyclePrev<cr>')
+vim.keymap.set('n', 'm', '<cmd>NvimTreeToggle<cr>')
 
 -- Basic clipboard interaction
-vim.keymap.set({'n', 'x'}, 'cp', '"+y')
+vim.keymap.set({'n', 'x'}, 'cf', '"+y')
 vim.keymap.set({'n', 'x'}, 'cv', '"+p')
 
 -- Delete text
-vim.keymap.set({'n', 'x'}, 'f', '"_x')
+vim.keymap.set({'n', 'x'}, 'f', '"_x') -- Delete right side characters
 
 -- Commands
-vim.keymap.set('n', '<leader>w', '<cmd>write<cr>')
-vim.keymap.set('n', '<leader>bq', '<cmd>bdelete<cr>')
-vim.keymap.set('n', '<leader>bl', '<cmd>buffer #<cr>')
-
-
--- ========================================================================== --
--- ==                               COMMANDS                               == --
--- ========================================================================== --
-
-vim.api.nvim_create_user_command('ReloadConfig', 'source $MYVIMRC', {})
-
-local group = vim.api.nvim_create_augroup('user_cmds', {clear = true})
-
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight on yank',
-  group = group,
-  callback = function()
-    vim.highlight.on_yank({higroup = 'Visual', timeout = 200})
-  end,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = {'help', 'man'},
-  group = group,
-  command = 'nnoremap <buffer> q <cmd>quit<cr>'
-})
-
+vim.keymap.set('n', '<leader>w', '<cmd>write<cr>') -- Save file
+vim.keymap.set('n', '<leader>bq', '<cmd>bdelete<cr>') -- ?
+vim.keymap.set('n', '<leader>bl', '<cmd>buffer #<cr>') -- ?
+vim.keymap.set('n', '<leader>r', ':source %<cr>') -- Reload config
 
 -- ========================================================================== --
 -- ==                               PLUGINS                                == --
@@ -99,7 +94,7 @@ end
 
 function lazy.setup(plugins)
   -- You can "comment out" the line below after lazy.nvim is installed
-  --lazy.install(lazy.path) important comment
+  --lazy.install(lazy.path)
 
   vim.opt.rtp:prepend(lazy.path)
   require('lazy').setup(plugins, lazy.opts)
@@ -110,49 +105,50 @@ lazy.opts = {}
 
 lazy.setup({
 	-- Theming
-  {'ellisonleao/gruvbox.nvim'},
-  {'kyazdani42/nvim-web-devicons'},
-  {'nvim-lualine/lualine.nvim'},
-	{'lukas-reineke/indent-blankline.nvim'},
+	{'ellisonleao/gruvbox.nvim'},
+	{'nyoom-engineering/oxocarbon.nvim'},
+	{'kyazdani42/nvim-web-devicons'},
+	{'nvim-lualine/lualine.nvim'},
+	--{'lukas-reineke/indent-blankline.nvim'},
 	{'akinsho/bufferline.nvim'},
 
 	-- File explorer
 	{'nvim-tree/nvim-tree.lua'},
 
 	-- Fuzzy finder
-  {'nvim-telescope/telescope.nvim', branch = '0.1.x'},
-  {'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
+	{'nvim-telescope/telescope.nvim', branch = '0.1.x'},
+	{'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
 
 	-- Git
 	{'lewis6991/gitsigns.nvim'},
-  {'tpope/vim-fugitive'},
+	{'tpope/vim-fugitive'},
 
 	-- Utilities
-  {'moll/vim-bbye'},
-  {'nvim-lua/plenary.nvim'},
-  {'akinsho/toggleterm.nvim'},
+	{'moll/vim-bbye'},
+	{'nvim-lua/plenary.nvim'},
+	{'akinsho/toggleterm.nvim'},
 
 	-- Code manipulation
-	{'nvim-treesitter/nvim-treesitter'},
-	{'nvim-treesitter/nvim-treesitter-textobjects'},
-  {'numToStr/Comment.nvim'},
-  {'tpope/vim-surround'},
-  {'wellle/targets.vim'},
-  {'tpope/vim-repeat'},
+	--{'nvim-treesitter/nvim-treesitter'},
+	--{'nvim-treesitter/nvim-treesitter-textobjects'},
+	--{'numToStr/Comment.nvim'},
+	--{'tpope/vim-surround'},
+	--{'wellle/targets.vim'},
+	--{'tpope/vim-repeat'},
 	
 	-- LSP support
-  {'neovim/nvim-lspconfig'},
+	{'neovim/nvim-lspconfig'},
 
 	-- Autocomplete
 	{'hrsh7th/nvim-cmp'},
-  {'hrsh7th/cmp-buffer'},
-  {'hrsh7th/cmp-path'},
-  {'saadparwaiz1/cmp_luasnip'},
+	{'hrsh7th/cmp-buffer'},
+	{'hrsh7th/cmp-path'},
+	{'saadparwaiz1/cmp_luasnip'},
 	{'hrsh7th/cmp-nvim-lsp'},
 
 	-- Snippets
-  {'L3MON4D3/LuaSnip'},
-  {'rafamadriz/friendly-snippets'},
+	{'L3MON4D3/LuaSnip'},
+	{'rafamadriz/friendly-snippets'},
 })
 
 
@@ -164,11 +160,7 @@ lazy.setup({
 -- Colorscheme
 ---
 vim.opt.termguicolors = true
-vim.opt.background = "dark"
-require("gruvbox").setup ({
-	contrast = "hard",
-})
-vim.cmd.colorscheme('gruvbox')
+vim.cmd.colorscheme('oxocarbon')
 
 
 ---
@@ -176,20 +168,20 @@ vim.cmd.colorscheme('gruvbox')
 ---
 -- See :help indent-blankline-setup
 
-vim.cmd [[highlight IndentBlanklineIndent1 guifg=#928374 gui=nocombine]]
+--vim.cmd [[highlight IndentBlanklineIndent1 guifg=#928374 gui=nocombine]]
 
-require('indent_blankline').setup({
-  char = '▏',
-  show_trailing_blankline_indent = false,
-  show_first_indent_level = false,
-  use_treesitter = true,
-  show_current_context = false,
-	show_end_of_line = false,
-  space_char_blankline = " ",
-	char_highlight_list = {
-        "IndentBlanklineIndent1",
-    },
-})
+--require('indent_blankline').setup({
+--  char = '▏',
+--  show_trailing_blankline_indent = false,
+--  show_first_indent_level = false,
+--  use_treesitter = true,
+--  show_current_context = false,
+--	show_end_of_line = false,
+--  space_char_blankline = " ",
+--	char_highlight_list = {
+--        "IndentBlanklineIndent1",
+--    },
+--})
 
 
 ---
@@ -201,7 +193,7 @@ vim.keymap.set('n', '<leader>bc', '<cmd>Bdelete<CR>')
 ---
 -- Comment.nvim
 ---
-require('Comment').setup({})
+--require('Comment').setup({})
 
 
 ---
@@ -238,7 +230,7 @@ vim.opt.showmode = false
 -- See :help lualine.txt
 require('lualine').setup({
   options = {
-    theme = 'gruvbox',
+    theme = 'auto',
     icons_enabled = true,
     component_separators = '|',
     section_separators = '',
@@ -308,48 +300,45 @@ require('nvim-tree').setup({
     -- :help nvim-tree.api
     local api = require('nvim-tree.api')
 
-    bufmap('S', api.node.open.edit, 'Expand folder or go to file')
-    bufmap('D', api.node.navigate.parent_close, 'Close parent folder')
-    bufmap('F', api.tree.toggle_hidden_filter, 'Toggle hidden files')
+    bufmap('o', api.node.open.edit, 'Expand folder or go to file')
+    bufmap('O', api.node.navigate.parent_close, 'Close parent folder')
+    bufmap('<leader>o', api.tree.toggle_hidden_filter, 'Toggle hidden files')
   end
 })
 
-vim.keymap.set('n', '<leader>a', '<cmd>NvimTreeToggle<cr>')
 
 
 ---
 -- Treesitter
 ---
 -- See :help nvim-treesitter-modules
-require('nvim-treesitter.configs').setup({
-  highlight = {
-    enable = true,
-  },
-  -- :help nvim-treesitter-textobjects-modules
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
-      }
-    },
-  },
-  ensure_installed = {
-    'c',
-		'javascript',
-		'typescript',
-		'tsx',
-    'lua',
-    'vim',
-    'vimdoc',
-    'css',
-    'json'
-  },
-})
+--require('nvim-treesitter.configs').setup({
+--  highlight = {
+--    enable = false,
+--  },
+--  -- :help nvim-treesitter-textobjects-modules
+--  textobjects = {
+--    select = {
+--      enable = true,
+--      lookahead = true,
+--      keymaps = {
+--        ['af'] = '@function.outer',
+--        ['if'] = '@function.inner',
+--        ['ac'] = '@class.outer',
+--        ['ic'] = '@class.inner',
+--      }
+--    },
+--  },
+--  ensure_installed = {
+--    'c',
+--	'javascript',
+--    'lua',
+--    'vim',
+--    'vimdoc',
+--    'css',
+--    'json'
+--  },
+--})
 
 
 ---
@@ -487,7 +476,7 @@ sign({name = 'DiagnosticSignInfo', text = '»'})
 
 -- See :help vim.diagnostic.config()
 vim.diagnostic.config({
-  virtual_text = false,
+  virtual_text = true,
   severity_sort = true,
   float = {
     border = 'rounded',
@@ -536,9 +525,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     bufmap('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>')
     bufmap('x', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>')
-
-    -- if using Neovim v0.8 uncomment this
-    -- bufmap('x', '<F4>', '<cmd>lua vim.lsp.buf.range_code_action()<cr>')
   end
 })
 
@@ -550,18 +536,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- Prevent multiple instance of lsp servers
 -- if file is sourced again
 if vim.g.lsp_setup_ready == nil then
-  vim.g.lsp_setup_ready = true
+	vim.g.lsp_setup_ready = true
 
-  -- See :help lspconfig-setup
-  lspconfig.clangd.setup({})
-	lspconfig.html.setup({})
-  lspconfig.cssls.setup({})
-  lspconfig.eslint.setup({})
-  lspconfig.tsserver.setup({
-    settings = {
-      completions = {
-        completeFunctionCalls = true
-      }
-    },
-  })
+	-- See :help lspconfig-setup
+	lspconfig.clangd.setup({})
 end
